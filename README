@@ -29,6 +29,8 @@ Requirements
 ``masquerade`` depends on django's SessionMiddleware and, obviously,
 ``django.contrib.auth``.
 
+The unit tests depend on the mock_ library.
+
 Template Tags
 -------------------------------
 The ``masquerade`` template tag library provides the following tags:
@@ -54,3 +56,4 @@ The following settings can be set in your project's settings file.
   with both is_staff and is_superuser set to True will be allowed to use this
   feature.
 
+.. _mock: http://www.voidspace.org.uk/python/mock/
