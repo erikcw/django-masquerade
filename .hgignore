@@ -1,0 +1,6 @@
+syntax: glob
+*.pyc
+files/*
+docs
+doc_src/_build
+.DS_Store
