@@ -11,9 +11,9 @@ MASQUERADE_REQUIRE_SUPERUSER = getattr(settings,
   'MASQUERADE_REQUIRE_SUPERUSER', False)
 
 def mask(request, template_name='masquerade/mask_form.html'):
-    if (not request.user.is_staff \
-      and (MASQUERADE_REQUIRE_SUPERUSER and not request.user.is_superuser)) \
-      and not request.user.is_masked:
+    if not request.user.is_masked and not request.user.is_staff:
+        return HttpResponseForbidden()
+    elif not request.user.is_superuser and MASQUERADE_REQUIRE_SUPERUSER:
         return HttpResponseForbidden()
 
     if request.method == 'POST':
@@ -29,9 +29,9 @@ def mask(request, template_name='masquerade/mask_form.html'):
       context_instance=RequestContext(request))
 
 def unmask(request):
-    if (not request.user.is_staff \
-      and (MASQUERADE_REQUIRE_SUPERUSER and not request.user.is_superuser)) \
-      and not request.user.is_masked:
+    if not request.user.is_masked and not request.user.is_staff:
+        return HttpResponseForbidden()
+    elif not request.user.is_superuser and MASQUERADE_REQUIRE_SUPERUSER:
         return HttpResponseForbidden()
 
     # turn off masquerading
