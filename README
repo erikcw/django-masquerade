@@ -5,7 +5,7 @@ Masquerade is a simple app to allow site administrators (IE, any user with
 is_staff = True) to browse the site as a different user. 
 
 It is implemented via a middleware that looks for a specific key in the user's
-session -- the user to masquerade as. Also included are a views and templates
+session -- the user to masquerade as. Also included are views and templates
 to allow the staff user to enter a username to masquerade and turn off
 masquerading as well as a template tag that provides links to these views for
 staff users.
