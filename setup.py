@@ -16,7 +16,7 @@ DESC = " ".join(__import__('masquerade').__doc__.splitlines()).strip()
 setup(
     name = "django-masquerade",
     version = __import__('masquerade').get_version().replace(' ', '-'),
-    url = '',
+    url = 'https://bitbucket.org/technivore/django-masquerade',
     author = 'Matthew Rich',
     author_email = 'matthew@technivore.org',
     description = DESC,
