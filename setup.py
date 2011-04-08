@@ -1,5 +1,5 @@
 import os
-from setuptools import setup, find_packages
+from distutils.core import setup
 
 def read_file(filename):
     """Read a file into a string"""
@@ -21,7 +21,7 @@ setup(
     author_email = 'matthew@technivore.org',
     description = DESC,
     long_description = read_file('README'),
-    packages = find_packages(),
+    packages = ['masquerade',],
     include_package_data = True,
     install_requires=read_file('requirements.txt'),
     classifiers = [
