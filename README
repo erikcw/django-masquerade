@@ -12,6 +12,7 @@ staff users.
 
 Installation
 -------------------------------
+- ``pip install django-masquerade`` (or clone/fork)
 - Add ``"masquerade"`` to your ``INSTALLED_APPS`` setting
 - Add ``"masquerade.middleware.MasqueradeMiddleware"`` to your
   ``MIDDLEWARE_CLASSES`` setting. Note this must come after Session and
