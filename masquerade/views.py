@@ -35,6 +35,9 @@ def unmask(request):
         return HttpResponseForbidden()
 
     # turn off masquerading
-    del(request.session['mask_user']) 
+    try:
+        del(request.session['mask_user']) 
+    except KeyError:
+        pass
 
     return HttpResponseRedirect(MASQUERADE_REDIRECT_URL)
