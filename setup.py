@@ -21,7 +21,7 @@ setup(
     author_email = 'matthew@technivore.org',
     description = DESC,
     long_description = read_file('README'),
-    packages = ['masquerade',],
+    packages = ['masquerade','masquerade.templatetags'],
     include_package_data = True,
     install_requires=read_file('requirements.txt'),
     classifiers = [
