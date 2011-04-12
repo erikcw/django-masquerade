@@ -44,7 +44,7 @@ The ``masquerade`` template tag library provides the following tags:
   currently logged in user is masquerading as.
 
 **Note**: These template tags require that the ``request`` object be in the
-template context, so either use ``RequestContext`` to render the template or make
+template context, so use ``RequestContext`` to render the template and make
 sure the ``django.core.context_processors.request`` context processor is used.
 
 Settings
