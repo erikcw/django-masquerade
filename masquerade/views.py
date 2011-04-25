@@ -29,12 +29,7 @@ def mask(request, template_name='masquerade/mask_form.html'):
       context_instance=RequestContext(request))
 
 def unmask(request):
-    if not request.user.is_masked and not request.user.is_staff:
-        return HttpResponseForbidden()
-    elif not request.user.is_superuser and MASQUERADE_REQUIRE_SUPERUSER:
-        return HttpResponseForbidden()
-
-    # turn off masquerading
+    # Turn off masquerading. Don't bother checking permissions.
     try:
         del(request.session['mask_user']) 
     except KeyError:
