@@ -58,3 +58,15 @@ The following settings can be set in your project's settings file.
   feature.
 
 .. _mock: http://www.voidspace.org.uk/python/mock/
+
+Signals
+-------------------------------
+``masquerade.signals`` defines two signals that can be attached to:
+
+- ``masquerade.signals.mask_on`` is sent when the user successfully masquerades
+  as another user. It is sent one argument, ``mask_username``, the username of
+  the user being masqueraded as. The ``sender`` argument is an instance of
+  ``masquerade.forms.MaskForm``.
+- ``masquerade.signals.mask_off`` is sent when a masqueraded user visits the
+  ``unmask`` view. It also receives a ``mask_username`` argument. The
+  ``sender`` argument is an empty object.

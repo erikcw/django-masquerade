@@ -6,6 +6,7 @@ from django.test import TestCase, Client
 from mock import Mock
 from masquerade.middleware import MasqueradeMiddleware
 import masquerade.views
+import masquerade.signals
 
 class MasqueradeTestCase(TestCase):
     """
@@ -13,6 +14,9 @@ class MasqueradeTestCase(TestCase):
     """
 
     def setUp(self):
+        self.mask_on_signal_received = None
+        self.mask_off_signal_received = None
+
         u = User.objects.create_user(username='generic',
           email='generic@foo.com', password='abc123')
         u.is_staff = False
@@ -93,3 +97,29 @@ class MasqueradeTestCase(TestCase):
 
         self.assert_(request.user.is_masked == False)
         self.assert_(request.user == User.objects.get(username='super'))
+
+    def test_mask_on_signal_sent(self):
+        def receiver(sender, mask_username, **kwargs):
+            self.mask_on_signal_received = mask_username
+
+        masquerade.signals.mask_on.connect(receiver)
+        c = Client() 
+        c.login(username='super', password='abc123')
+        c.post(reverse('masquerade.views.mask'),
+          {'mask_user': 'generic'})
+        self.assertEqual(self.mask_on_signal_received, 'generic')
+
+    def test_mask_off_signal_sent(self):
+        def receiver(sender, mask_username, **kwargs):
+            self.mask_off_signal_received = mask_username
+
+        masquerade.signals.mask_off.connect(receiver)
+        c = Client() 
+        c.login(username='super', password='abc123')
+        session = c.session
+        session['mask_user'] = 'generic'
+        session.save()
+        c.get(reverse('masquerade.views.unmask'))
+        self.assertEqual(self.mask_off_signal_received, 'generic')
+
+
