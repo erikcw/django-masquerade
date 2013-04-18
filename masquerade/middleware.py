@@ -1,6 +1,8 @@
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+try:
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+except ImportError:
+    from django.contrib.auth.models import User
 
 class MasqueradeMiddleware(object):
     def process_request(self, request):
