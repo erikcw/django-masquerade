@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.http import HttpRequest
 from django.test import TestCase, Client
@@ -7,6 +7,8 @@ from mock import Mock
 from masquerade.middleware import MasqueradeMiddleware
 import masquerade.views
 import masquerade.signals
+
+User = get_user_model()
 
 class MasqueradeTestCase(TestCase):
     """
@@ -103,7 +105,7 @@ class MasqueradeTestCase(TestCase):
             self.mask_on_signal_received = mask_username
 
         masquerade.signals.mask_on.connect(receiver)
-        c = Client() 
+        c = Client()
         c.login(username='super', password='abc123')
         c.post(reverse('masquerade.views.mask'),
           {'mask_user': 'generic'})
@@ -114,7 +116,7 @@ class MasqueradeTestCase(TestCase):
             self.mask_off_signal_received = mask_username
 
         masquerade.signals.mask_off.connect(receiver)
-        c = Client() 
+        c = Client()
         c.login(username='super', password='abc123')
         session = c.session
         session['mask_user'] = 'generic'
