@@ -23,8 +23,6 @@ setup(
     long_description = read_file('README'),
     packages = ['masquerade','masquerade.templatetags'],
     package_data = {'masquerade': ['templates/masquerade/*.html',]},
-    include_package_data = True,
-    install_requires=read_file('requirements.txt'),
     classifiers = [
         'License :: OSI Approved :: Apache Software License',
         'Framework :: Django',
