@@ -4,3 +4,7 @@ files/*
 docs
 doc_src/_build
 .DS_Store
+build/*
+dist/*
+*.orig
+MANIFEST
