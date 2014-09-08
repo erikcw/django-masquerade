@@ -1,8 +1,4 @@
-try:
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-except ImportError:
-    from django.contrib.auth.models import User
+from masquerade.users import UserModel
 
 class MasqueradeMiddleware(object):
     def process_request(self, request):
@@ -15,6 +11,7 @@ class MasqueradeMiddleware(object):
         request.user.is_masked = False
 
         if 'mask_user' in request.session:
+            User = UserModel()
             try:
                 request.user = \
                   User.objects.get(username=request.session['mask_user'])
