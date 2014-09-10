@@ -9,9 +9,3 @@ def UserModel():
         from django.contrib.auth.models import User
         return User
 
-
-def UserModelString():
-    try:
-        return settings.AUTH_USER_MODEL
-    except AttributeError:
-        return 'auth.User'
