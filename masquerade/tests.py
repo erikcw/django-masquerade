@@ -90,6 +90,7 @@ class MasqueradeTestCase(TestCase):
 
         self.assert_(request.user.is_masked == True)
         self.assert_(request.user == User.objects.get(username='generic'))
+        self.assert_(request.user.original_user == User.objects.get(username='super'))
 
     def test_unmask(self):
         mw = MasqueradeMiddleware()
@@ -102,6 +103,7 @@ class MasqueradeTestCase(TestCase):
 
         self.assert_(request.user.is_masked == False)
         self.assert_(request.user == User.objects.get(username='super'))
+        self.assert_(request.user.original_user == None)
 
     def test_mask_on_signal_sent(self):
         def receiver(sender, mask_username, **kwargs):
