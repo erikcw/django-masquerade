@@ -4,7 +4,7 @@ django-masquerade
 __version_info__ = {
     'major': 0,
     'minor': 1,
-    'micro': 8,
+    'micro': 9,
     'releaselevel': 'final',
     'serial': 1
 }
