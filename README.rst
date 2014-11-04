@@ -47,6 +47,15 @@ The ``masquerade`` template tag library provides the following tags:
 template context, so use ``RequestContext`` to render the template and make
 sure the ``django.core.context_processors.request`` context processor is used.
 
+User Attributes
+---------------
+Two attributes are added to the ``request.user`` object by the masquerade middleware:
+
+- ``is_masked``. True if masquerading is in use and this user is not actually the original user.
+
+- ``original_user``. The non-masked user that initiated the masquerade. Set to None 
+if no masquerading is happening.
+
 Settings
 --------
 The following settings can be set in your project's settings file. 
