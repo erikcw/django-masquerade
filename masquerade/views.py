@@ -21,31 +21,32 @@ def mask(request, template_name='masquerade/mask_form.html'):
         return HttpResponseForbidden()    
 
     if request.method == 'POST':
+
         form = MaskForm(request.POST)
-        if form.is_valid():
-            import ipdb;ipdb.set_trace()
-            mask_user = form.cleaned_data['mask_user']
+        form.full_clean()
+
+        if MASQUERADE_REQUIRE_COMMON_GROUP:
             
-            if MASQUERADE_REQUIRE_COMMON_GROUP:
-                
-                user_groups = request.user.groups.all()
-                mask_groups = mask_user.groups.all()
-                
-                # If the user is not super, and there are no common groups, 
-                # then deny access.
-                if (
-                    not request.user.is_superuser and 
-                    not any(x in mask_groups for x in user_groups
-                ):
-                    raise forms.ValidationError(
-                        "You do not have permission to act as that user."
-                    )
+            user_groups = request.user.groups.all()
+            mask_groups = form.user.groups.all()
             
-            # turn on masquerading
-            request.session['mask_user'] = mask_user
-            mask_on.send(sender=form,
-                mask_username=form.cleaned_data['mask_user'])
-            return HttpResponseRedirect(MASQUERADE_REDIRECT_URL)
+            # If the user is not super, and there are no common groups, 
+            # then deny access.
+            if (
+                not request.user.is_superuser and 
+                not any(x in mask_groups for x in user_groups)
+            ):
+                form._errors[forms.forms.NON_FIELD_ERRORS] = (
+                    forms.util.ErrorList([u"You may not access that username"])
+                )
+                
+            if form.is_valid():
+                
+                # turn on masquerading
+                request.session['mask_user'] = form.cleaned_data['mask_user']
+                mask_on.send(sender=form,
+                    mask_username=form.cleaned_data['mask_user'])
+                return HttpResponseRedirect(MASQUERADE_REDIRECT_URL)
     else:
         form = MaskForm()
 
