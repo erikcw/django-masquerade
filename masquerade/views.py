@@ -25,7 +25,7 @@ def mask(request, template_name='masquerade/mask_form.html'):
         form = MaskForm(request.POST)
         form.full_clean()
 
-        if MASQUERADE_REQUIRE_COMMON_GROUP:
+        if MASQUERADE_REQUIRE_COMMON_GROUP and form.is_valid():
             
             user_groups = request.user.groups.all()
             mask_groups = form.user.groups.all()
@@ -40,13 +40,13 @@ def mask(request, template_name='masquerade/mask_form.html'):
                     forms.util.ErrorList([u"You may not access that username"])
                 )
                 
-            if form.is_valid():
-                
-                # turn on masquerading
-                request.session['mask_user'] = form.cleaned_data['mask_user']
-                mask_on.send(sender=form,
-                    mask_username=form.cleaned_data['mask_user'])
-                return HttpResponseRedirect(MASQUERADE_REDIRECT_URL)
+        if form.is_valid():
+            
+            # turn on masquerading
+            request.session['mask_user'] = form.cleaned_data['mask_user']
+            mask_on.send(sender=form,
+                mask_username=form.cleaned_data['mask_user'])
+            return HttpResponseRedirect(MASQUERADE_REDIRECT_URL)
     else:
         form = MaskForm()
 
