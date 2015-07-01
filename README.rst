@@ -67,7 +67,8 @@ The following settings can be set in your project's settings file.
   feature.
 - ``MASQUERADE_REQUIRE_COMMON_GROUP`` (default: False). If set to true, only users
   with that have at least one common Group (django auth Group) with the masqueraded
-  user will be allowed to masquerade as that user.
+  user will be allowed to masquerade as that user. If user is a superuser, this 
+  requirement is ignored.
 
 .. _mock: http://www.voidspace.org.uk/python/mock/
 

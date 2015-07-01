@@ -23,7 +23,7 @@ def mask(request, template_name='masquerade/mask_form.html'):
     if request.method == 'POST':
         form = MaskForm(request.POST)
         if form.is_valid():
-            
+            import ipdb;ipdb.set_trace()
             mask_user = form.cleaned_data['mask_user']
             
             if MASQUERADE_REQUIRE_COMMON_GROUP:
@@ -31,7 +31,12 @@ def mask(request, template_name='masquerade/mask_form.html'):
                 user_groups = request.user.groups.all()
                 mask_groups = mask_user.groups.all()
                 
-                if not any(x in mask_groups for x in user_groups):
+                # If the user is not super, and there are no common groups, 
+                # then deny access.
+                if (
+                    not request.user.is_superuser and 
+                    not any(x in mask_groups for x in user_groups
+                ):
                     raise forms.ValidationError(
                         "You do not have permission to act as that user."
                     )
