@@ -13,6 +13,7 @@ class MaskForm(forms.Form):
         username = self.cleaned_data['mask_user']
         try:
             u = User.objects.get(username=username)
+            self.user = u
         except User.DoesNotExist:
             raise forms.ValidationError("Invalid username")
         return username

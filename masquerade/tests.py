@@ -2,8 +2,9 @@ from django.conf import settings
 try:
     from django.contrib.auth import get_user_model
     User = get_user_model()
+    from django.contrib.auth.models import Group
 except ImportError:
-    from django.contrib.auth.models import User
+    from django.contrib.auth.models import User, Group
 
 from django.core.urlresolvers import reverse
 from django.http import HttpRequest
@@ -33,15 +34,27 @@ class MasqueradeTestCase(TestCase):
         u.is_staff = True
         u.is_superuser = True
         u.save()
+        
+        g = Group.objects.create(name='test_group')
 
         u = User.objects.create_user(username='staff',
           email='staff@foo.com', password='abc123')
         u.is_staff = True
         u.is_superuser = False
         u.save()
+        u.groups.add(g)
+
+        u = User.objects.create_user(username='group_member',
+          email='group_member@foo.com', password='abc123')
+        u.is_staff = True
+        u.is_superuser = False
+        u.save()
+        u.groups.add(g)
 
     def test_mask_form_permissions(self):
+        
         settings.MASQUERADE_REQUIRE_SUPERUSER = False
+        settings.MASQUERADE_REQUIRE_COMMON_GROUP = False
 
         # log in as superuser
         c = Client()
@@ -79,6 +92,44 @@ class MasqueradeTestCase(TestCase):
         response = c.post(reverse('masquerade.views.mask'), {'mask_user': 'nobody'})
         self.assert_(response.status_code == 403)
 
+        masquerade.views.MASQUERADE_REQUIRE_SUPERUSER = False
+
+        # hit masquerade with user of same group, 
+        # with REQUIRE_COMMON_GROUP as False
+        c = Client()
+        c.login(username='staff', password='abc123')
+        response = c.post(reverse('masquerade.views.mask'),
+          {'mask_user': 'group_member'})
+        self.assert_(response.status_code == 302)
+        
+        # hit masquerade with user with not the same group, 
+        # with REQUIRE_COMMON_GROUP as False
+        c = Client()
+        c.login(username='staff', password='abc123')
+        response = c.post(reverse('masquerade.views.mask'),
+          {'mask_user': 'generic'})
+        self.assert_(response.status_code == 302)
+        
+        masquerade.views.MASQUERADE_REQUIRE_COMMON_GROUP = True
+        
+        # hit masquerade with same group, 
+        # with REQUIRE_COMMON_GROUP as True
+        c = Client()
+        c.login(username='staff', password='abc123')
+        response = c.post(reverse('masquerade.views.mask'),
+          {'mask_user': 'group_member'})
+        self.assert_(response.status_code == 302)
+        
+        # hit masquerade with user with not the same group, 
+        # with REQUIRE_COMMON_GROUP as True
+        c = Client()
+        c.login(username='staff', password='abc123')
+        response = c.post(reverse('masquerade.views.mask'),
+          {'mask_user': 'generic'})        
+        self.assert_(response.status_code == 200)
+        self.assert_(response.context['form'].is_valid() == False)
+        
+        
     def test_mask(self):
         mw = MasqueradeMiddleware()
 
