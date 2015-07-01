@@ -65,6 +65,9 @@ The following settings can be set in your project's settings file.
 - ``MASQUERADE_REQUIRE_SUPERUSER`` (default: False). If set to true, only users
   with both is_staff and is_superuser set to True will be allowed to use this
   feature.
+- ``MASQUERADE_REQUIRE_COMMON_GROUP`` (default: False). If set to true, only users
+  with that have at least one common Group (django auth Group) with the masqueraded
+  user will be allowed to masquerade as that user.
 
 .. _mock: http://www.voidspace.org.uk/python/mock/
 

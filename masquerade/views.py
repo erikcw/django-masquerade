@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from masquerade.forms import MaskForm
+from masquerade.forms import MaskForm, forms
 from masquerade.signals import mask_on, mask_off
 
 MASQUERADE_REDIRECT_URL = getattr(settings, 'MASQUERADE_REDIRECT_URL', '/')
@@ -32,7 +32,9 @@ def mask(request, template_name='masquerade/mask_form.html'):
                 mask_groups = mask_user.groups.all()
                 
                 if not any(x in mask_groups for x in user_groups):
-                    return HttpResponseForbidden()
+                    raise forms.ValidationError(
+                        "You do not have permission to act as that user."
+                    )
             
             # turn on masquerading
             request.session['mask_user'] = mask_user
