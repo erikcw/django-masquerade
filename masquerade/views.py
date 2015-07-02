@@ -3,8 +3,14 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from masquerade.forms import MaskForm, forms
+from django import forms
+from masquerade.forms import MaskForm
 from masquerade.signals import mask_on, mask_off
+
+try:
+    from django.forms.util import ErrorList # compatibility with < Django 1.7
+except ImportError:
+    from django.forms.utils import ErrorList
 
 MASQUERADE_REDIRECT_URL = getattr(settings, 'MASQUERADE_REDIRECT_URL', '/')
 
@@ -37,7 +43,7 @@ def mask(request, template_name='masquerade/mask_form.html'):
                 not any(x in mask_groups for x in user_groups)
             ):
                 form._errors[forms.forms.NON_FIELD_ERRORS] = (
-                    forms.util.ErrorList([u"You may not access that username"])
+                    ErrorList([u"You may not access that username"])
                 )
                 
         if form.is_valid():
