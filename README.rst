@@ -69,6 +69,9 @@ The following settings can be set in your project's settings file.
   with that have at least one common Group (django auth Group) with the masqueraded
   user will be allowed to masquerade as that user. If user is a superuser, this 
   requirement is ignored.
+- ``MASQUERADE_USER_SEARCH_FIELDS`` (default: ``['username', 'email']``). The
+  list of fields on the User object that will be searched in the masquerade
+  form.
 
 .. _mock: http://www.voidspace.org.uk/python/mock/
 
