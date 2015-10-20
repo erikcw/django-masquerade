@@ -1,3 +1,5 @@
+import sys
+
 from django import forms
 from django.conf import settings
 from django.db.models import Q
@@ -8,6 +10,13 @@ try:
     User = get_user_model()
 except ImportError:
     from django.contrib.auth.models import User
+
+# Monkey patch for compatibility with Python 3
+PY3 = sys.version_info[0] == 3
+if PY3:
+    import functools
+    reduce = functools.reduce
+
 
 class MaskForm(forms.Form):
     mask_user = forms.CharField(max_length=254, label="Username or Email")
