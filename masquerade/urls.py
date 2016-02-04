@@ -1,6 +1,10 @@
 from django.conf.urls import patterns, url
 
-urlpatterns = patterns('',
-    url(r'^mask/$', 'masquerade.views.mask'),
-    url(r'^unmask/$', 'masquerade.views.unmask'),
-)
+from masquerade.views import mask
+from masquerade.views import unmask
+
+
+urlpatterns = [
+    url(r'^mask/$', mask),
+    url(r'^unmask/$', unmask),
+]
