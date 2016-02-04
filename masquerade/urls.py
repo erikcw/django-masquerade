@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from masquerade.views import mask
 from masquerade.views import unmask
