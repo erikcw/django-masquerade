@@ -61,27 +61,27 @@ class MasqueradeTestCase(TestCase):
         self.assert_(c.login(username='super', password='abc123'))
 
         # hit masquerade form with bad username
-        response = c.post(reverse('masquerade.views.mask'), {'mask_user': 'nobody'})
+        response = c.post(reverse('masquerade-mask'), {'mask_user': 'nobody'})
 
         # verify form comes back with error
         self.assert_(response.status_code == 200)
         self.assert_(response.context['form'].is_valid() == False)
 
         # hit masquerade form with generic username
-        response = c.post(reverse('masquerade.views.mask'),
+        response = c.post(reverse('masquerade-mask'),
           {'mask_user': 'generic'})
         self.assert_(response.status_code == 302)
 
         # make sure non-staff user cannot user form
         c = Client()
         c.login(username='generic', password='abc123')
-        response = c.post(reverse('masquerade.views.mask'), {'mask_user': 'nobody'})
+        response = c.post(reverse('masquerade-mask'), {'mask_user': 'nobody'})
         self.assert_(response.status_code == 403)
 
         # make sure staff user can use form
         c = Client()
         c.login(username='staff', password='abc123')
-        response = c.post(reverse('masquerade.views.mask'), {'mask_user': 'nobody'})
+        response = c.post(reverse('masquerade-mask'), {'mask_user': 'nobody'})
         self.assert_(response.status_code == 200)
 
         # ... unless require superuser setting is true.
@@ -89,7 +89,7 @@ class MasqueradeTestCase(TestCase):
 
         c = Client()
         c.login(username='staff', password='abc123')
-        response = c.post(reverse('masquerade.views.mask'), {'mask_user': 'nobody'})
+        response = c.post(reverse('masquerade-mask'), {'mask_user': 'nobody'})
         self.assert_(response.status_code == 403)
 
         masquerade.views.MASQUERADE_REQUIRE_SUPERUSER = False
@@ -98,7 +98,7 @@ class MasqueradeTestCase(TestCase):
         # with REQUIRE_COMMON_GROUP as False
         c = Client()
         c.login(username='staff', password='abc123')
-        response = c.post(reverse('masquerade.views.mask'),
+        response = c.post(reverse('masquerade-mask'),
           {'mask_user': 'group_member'})
         self.assert_(response.status_code == 302)
 
@@ -106,7 +106,7 @@ class MasqueradeTestCase(TestCase):
         # with REQUIRE_COMMON_GROUP as False
         c = Client()
         c.login(username='staff', password='abc123')
-        response = c.post(reverse('masquerade.views.mask'),
+        response = c.post(reverse('masquerade-mask'),
           {'mask_user': 'generic'})
         self.assert_(response.status_code == 302)
 
@@ -116,7 +116,7 @@ class MasqueradeTestCase(TestCase):
         # with REQUIRE_COMMON_GROUP as True
         c = Client()
         c.login(username='staff', password='abc123')
-        response = c.post(reverse('masquerade.views.mask'),
+        response = c.post(reverse('masquerade-mask'),
           {'mask_user': 'group_member'})
         self.assert_(response.status_code == 302)
 
@@ -124,7 +124,7 @@ class MasqueradeTestCase(TestCase):
         # with REQUIRE_COMMON_GROUP as True
         c = Client()
         c.login(username='staff', password='abc123')
-        response = c.post(reverse('masquerade.views.mask'),
+        response = c.post(reverse('masquerade-mask'),
           {'mask_user': 'generic'})
         self.assert_(response.status_code == 200)
         self.assert_(response.context['form'].is_valid() == False)
@@ -136,7 +136,7 @@ class MasqueradeTestCase(TestCase):
         self.assert_(c.login(username='super', password='abc123'))
         
         # hit masquerade form with generic email
-        response = c.post(reverse('masquerade.views.mask'),
+        response = c.post(reverse('masquerade-mask'),
           {'mask_user': 'generic@foo.com'})
         self.assert_(response.status_code == 302)
 
@@ -173,7 +173,7 @@ class MasqueradeTestCase(TestCase):
         masquerade.signals.mask_on.connect(receiver)
         c = Client()
         c.login(username='super', password='abc123')
-        c.post(reverse('masquerade.views.mask'),
+        c.post(reverse('masquerade-mask'),
           {'mask_user': 'generic'})
         self.assertEqual(self.mask_on_signal_received, 'generic')
 
@@ -187,5 +187,5 @@ class MasqueradeTestCase(TestCase):
         session = c.session
         session['mask_user'] = 'generic'
         session.save()
-        c.get(reverse('masquerade.views.unmask'))
+        c.get(reverse('masquerade-unmask'))
         self.assertEqual(self.mask_off_signal_received, 'generic')
