@@ -31,7 +31,7 @@ class MaskForm(forms.Form):
             self.user = u
         except User.DoesNotExist:
             raise forms.ValidationError("User not found.")
-        return u.username
+        return u.get_username()
 
     def get_user_search_fields(self):
         return getattr(settings, 'MASQUERADE_USER_SEARCH_FIELDS',
