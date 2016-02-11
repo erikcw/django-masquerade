@@ -16,7 +16,7 @@ class MasqueradeMiddleware(object):
             try:
                 original_user = request.user
                 request.user = \
-                  User.objects.get(username=request.session['mask_user'])
+                  User.objects.get_by_natural_key(request.session['mask_user'])
                 request.user.is_masked = True
                 request.user.original_user = original_user
             except User.DoesNotExist:

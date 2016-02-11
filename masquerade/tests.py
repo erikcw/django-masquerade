@@ -134,7 +134,7 @@ class MasqueradeTestCase(TestCase):
         # log in as superuser
         c = Client()
         self.assert_(c.login(username='super', password='abc123'))
-        
+
         # hit masquerade form with generic email
         response = c.post(reverse('masquerade.views.mask'),
           {'mask_user': 'generic@foo.com'})
@@ -145,25 +145,25 @@ class MasqueradeTestCase(TestCase):
 
         request = Mock(spec=HttpRequest)
         request.session = {'mask_user': 'generic'}
-        request.user = User.objects.get(username='super')
+        request.user = User.objects.get_by_natural_key('super')
 
         mw.process_request(request)
 
         self.assert_(request.user.is_masked == True)
-        self.assert_(request.user == User.objects.get(username='generic'))
-        self.assert_(request.user.original_user == User.objects.get(username='super'))
+        self.assert_(request.user == User.objects.get_by_natural_key('generic'))
+        self.assert_(request.user.original_user == User.objects.get_by_natural_key('super'))
 
     def test_unmask(self):
         mw = MasqueradeMiddleware()
 
         request = Mock(spec=HttpRequest)
         request.session = {}
-        request.user = User.objects.get(username='super')
+        request.user = User.objects.get_by_natural_key('super')
 
         mw.process_request(request)
 
         self.assert_(request.user.is_masked == False)
-        self.assert_(request.user == User.objects.get(username='super'))
+        self.assert_(request.user == User.objects.get_by_natural_key('super'))
         self.assert_(request.user.original_user == None)
 
     def test_mask_on_signal_sent(self):
