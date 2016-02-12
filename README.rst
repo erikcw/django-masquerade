@@ -73,7 +73,9 @@ The following settings can be set in your project's settings file.
   list of fields on the User object that will be searched in the masquerade
   form.
 
-.. _mock: http://www.voidspace.org.uk/python/mock/
+Additionally, masquerade respects the ``USERNAME_FIELD`` value of custom user classes
+implementing ``AbstractBaseUser``, although you must manually add the name of your username
+field to the ``MASQUERADE_USER_SEARCH_FIELDS`` setting as well.
 
 Signals
 -------
@@ -86,3 +88,9 @@ Signals
 - ``masquerade.signals.mask_off`` is sent when a masqueraded user visits the
   ``unmask`` view. It also receives a ``mask_username`` argument. The
   ``sender`` argument is an empty object.
+
+Testing
+------------
+masquerade ships with a test runner. To run the unit tests, simply ``python run_tests.py``.
+
+.. _mock: http://www.voidspace.org.uk/python/mock/
