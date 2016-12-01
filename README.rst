@@ -17,7 +17,7 @@ Installation
 - Include ``masquerade.urls`` from your project's root ``urls`` module
 - Optionally load and use the ``masquerade`` template tag library in your templates.
 - Add ``"masquerade.middleware.MasqueradeMiddleware"`` to your
-  ``MIDDLEWARE_CLASSES`` setting. (``MIDDLEWARE_CLASSES`` for django pre-1.10) Note this must come after Session and
+  ``MIDDLEWARE`` setting. (``MIDDLEWARE_CLASSES`` for django pre-1.10) Note this must come after Session and
   Authentication middleware classes.
 
 Note that there is one template supplied by this app,
