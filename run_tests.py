@@ -30,7 +30,13 @@ if __name__ == "__main__":
             'masquerade.middleware.MasqueradeMiddleware',
         ],
         ROOT_URLCONF='masquerade.test_urls',
-        DEBUG=False
+        DEBUG=False,
+        TEMPLATES = [
+            {
+                'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                'APP_DIRS': True,
+            },
+        ]
     )
 
     django.setup()
