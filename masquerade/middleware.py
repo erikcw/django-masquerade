@@ -1,13 +1,12 @@
 from masquerade.users import UserModel
 
-class MasqueradeMiddleware(object):
-    def __init__(self, *args):
-        if args:
-            self.get_response = args[0]
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    class MiddlewareMixin(object):
+        pass
 
-    def __call__(self, request):
-        self.process_request(request)
-
+class MasqueradeMiddleware(MiddlewareMixin):
     def process_request(self, request):
         """Checks for the presence of "mask_user" in the session. The value
         should be the username of the user to be masqueraded as. Note we
