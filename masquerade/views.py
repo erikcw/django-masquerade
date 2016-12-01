@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django import forms
 from masquerade.forms import MaskForm
@@ -33,17 +33,17 @@ def mask(request, template_name='masquerade/mask_form.html'):
         if MASQUERADE_REQUIRE_COMMON_GROUP and form.is_valid():
             user_groups = request.user.groups.all()
             mask_groups = form.user.groups.all()
-            
-            # If the user is not super, and there are no common groups, 
+
+            # If the user is not super, and there are no common groups,
             # then deny access.
             if (
-                not request.user.is_superuser and 
+                not request.user.is_superuser and
                 not any(x in mask_groups for x in user_groups)
             ):
                 form._errors[forms.forms.NON_FIELD_ERRORS] = (
                     ErrorList([u"You may not access that username"])
                 )
-                
+
         if form.is_valid():
             # turn on masquerading
             request.session['mask_user'] = form.cleaned_data['mask_user']
@@ -53,14 +53,13 @@ def mask(request, template_name='masquerade/mask_form.html'):
     else:
         form = MaskForm()
 
-    return render_to_response(template_name, {'form': form},
-      context_instance=RequestContext(request))
+    return render(request, template_name, {'form': form})
 
 def unmask(request):
     # Turn off masquerading. Don't bother checking permissions.
     try:
         mask_username = request.session['mask_user']
-        del(request.session['mask_user']) 
+        del(request.session['mask_user'])
         mask_off.send(sender=object(), mask_username=mask_username)
     except KeyError:
         pass
