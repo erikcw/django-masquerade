@@ -2,7 +2,7 @@
 ===================================
 
 Masquerade is a simple app to allow site administrators (IE, any user with
-is_staff = True) to browse the site as a different user. 
+is_staff = True) to browse the site as a different user.
 
 It is implemented via a middleware that looks for a specific key in the user's
 session -- the user to masquerade as. Also included are views and templates
@@ -14,11 +14,14 @@ Installation
 ------------
 - ``pip install django-masquerade`` (or clone/fork)
 - Add ``"masquerade"`` to your ``INSTALLED_APPS`` setting
-- Add ``"masquerade.middleware.MasqueradeMiddleware"`` to your
-  ``MIDDLEWARE_CLASSES`` setting. Note this must come after Session and
-  Authentication middleware classes.
 - Include ``masquerade.urls`` from your project's root ``urls`` module
 - Optionally load and use the ``masquerade`` template tag library in your templates.
+- **Django Version <= 1.9: **Add ``"masquerade.middleware.MasqueradeMiddleware"`` to your
+  ``MIDDLEWARE_CLASSES`` setting. Note this must come after Session and
+  Authentication middleware classes.
+- **Django Version >= 1.10:** Add ``"masquerade.middleware.masquerade_middleware"`` to your
+  ``MIDDLEWARE`` setting. Note this must come after Session and
+  Authentication middleware classes.
 
 Note that there is one template supplied by this app,
 ``masquerade/mask_form.html``, which does not inherit from any other template.
@@ -38,7 +41,7 @@ The ``masquerade`` template tag library provides the following tags:
 
 - ``masquerade_link`` creates a link to either the "Masquerade as user" URL (if
   masquerading is not active) or the "Turn off masquerading" URL (if
-  masquerading is active). 
+  masquerading is active).
 
 - ``masquerade_status`` displays the name of the (other) user that the
   currently logged in user is masquerading as.
@@ -53,12 +56,12 @@ Two attributes are added to the ``request.user`` object by the masquerade middle
 
 - ``is_masked``. True if masquerading is in use and this user is not actually the original user.
 
-- ``original_user``. The non-masked user that initiated the masquerade. Set to None 
+- ``original_user``. The non-masked user that initiated the masquerade. Set to None
 if no masquerading is happening.
 
 Settings
 --------
-The following settings can be set in your project's settings file. 
+The following settings can be set in your project's settings file.
 
 - ``MASQUERADE_REDIRECT_URL`` (default: "/"). The URL to redirect the user to after
   masquerading is activated.
@@ -67,7 +70,7 @@ The following settings can be set in your project's settings file.
   feature.
 - ``MASQUERADE_REQUIRE_COMMON_GROUP`` (default: False). If set to true, only users
   with that have at least one common Group (django auth Group) with the masqueraded
-  user will be allowed to masquerade as that user. If user is a superuser, this 
+  user will be allowed to masquerade as that user. If user is a superuser, this
   requirement is ignored.
 - ``MASQUERADE_USER_SEARCH_FIELDS`` (default: ``['username', 'email']``). The
   list of fields on the User object that will be searched in the masquerade
