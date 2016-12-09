@@ -18,10 +18,10 @@ class MasqueradeLinkNode(template.Node):
 
         try:
             if request.user.is_masked:
-                link = link % (reverse('masquerade.views.unmask'),
+                link = link % (reverse('masquerade-unmask'),
                   'Unmask!')
             else:
-                link = link % (reverse('masquerade.views.mask'),
+                link = link % (reverse('masquerade-mask'),
                   'Masquerade as user')
 
         except AttributeError:
