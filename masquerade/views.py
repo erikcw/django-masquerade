@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.shortcuts import render
 from django.template import RequestContext
