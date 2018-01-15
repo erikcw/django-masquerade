@@ -1,5 +1,5 @@
 try:
-    from django.conf.urls import url
+    from django.urls import url
 except ImportError:
     from django.core.urlresolvers import reverse
 
