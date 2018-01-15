@@ -1,4 +1,7 @@
-from django.conf.urls import url
+try:
+    from django.conf.urls import url
+except ImportError:
+    from django.core.urlresolvers import reverse
 
 from masquerade.views import mask, unmask
 
