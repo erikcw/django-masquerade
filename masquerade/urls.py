@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.conf.urls import re_path
 
 from masquerade.views import mask, unmask
 
 urlpatterns = [
-    url(r'^mask/$', mask, name='masquerade-mask'),
-    url(r'^unmask/$', unmask, name='masquerade-unmask'),
+    re_path(r'^mask/$', mask, name='masquerade-mask'),
+    re_path(r'^unmask/$', unmask, name='masquerade-unmask'),
 ]

@@ -1,8 +1,8 @@
-from django.conf.urls import include, url
+from django.conf.urls import include, re_path
 
 from masquerade import urls
 
 
 urlpatterns = [
-    url(r'', include(urls)),
+    re_path(r'', include(urls)),
 ]
