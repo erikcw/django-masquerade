@@ -1,5 +1,7 @@
 from django.dispatch import Signal
 
-mask_on = Signal(providing_args=['mask_username',])
+# providing_args=['mask_username',]
+mask_on = Signal()
 
-mask_off = Signal(providing_args=['mask_username',])
+# providing_args=['mask_username',]
+mask_off = Signal()
